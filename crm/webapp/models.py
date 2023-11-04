@@ -16,6 +16,7 @@ class Patient(models.Model):
     gender = models.CharField(max_length=10)
     contact_email = models.EmailField()
     contact_phone = models.CharField(max_length=15)
+    
 
 class Doctor(models.Model):
     name = models.CharField(max_length=255)
