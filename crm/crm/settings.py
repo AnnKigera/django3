@@ -249,6 +249,12 @@ JAZZMIN_SETTINGS = {
         "auth": "fas fa-users-cog",
         "auth.user": "fas fa-user",
         "auth.Group": "fas fa-users",
+        "webapp.Patient":"fas fa-users",
+        "webapp.UserProfile":"fas fa-users",
+        "webapp.Doctor":"fas fa-users",
+        "webapp.MedicalRecord":"fas fa-award",
+        "webapp.Comment":"fas fa-users",
+        "webapp.Record":"fas fa-file",
     },
     # Icons that are used when one is not manually specified
     "default_icon_parents": "fas fa-chevron-circle-right",
@@ -319,3 +325,6 @@ JAZZMIN_UI_TWEAKS = {
         "success": "btn-success"
     }
 }
+import os
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')

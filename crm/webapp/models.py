@@ -10,12 +10,12 @@ class UserProfile(models.Model):
         gender = models.CharField(max_length=10)
 
 class Patient(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     age = models.IntegerField()
     gender = models.CharField(max_length=10)
     contact_email = models.EmailField()
     contact_phone = models.CharField(max_length=15)
+    report=models.FileField(upload_to="Report/", default="patient_default_report.pdf")
     
 
 class Doctor(models.Model):

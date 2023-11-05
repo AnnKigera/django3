@@ -10,7 +10,7 @@ class UserProfileAdmin(admin.ModelAdmin):
 admin.site.register(models.UserProfile,UserProfileAdmin)
 
 class PatientAdmin(admin.ModelAdmin):
-    list_display=( 'name', 'age', 'gender','contact_email', 'contact_phone' )
+    list_display=( 'name', 'age', 'gender','contact_email', 'contact_phone','report' )
 admin.site.register(models.Patient,PatientAdmin)
 
 class DoctorAdmin(admin.ModelAdmin):
