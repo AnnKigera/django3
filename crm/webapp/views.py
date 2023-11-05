@@ -11,6 +11,7 @@ from .models import Record
 from django.contrib import messages
 
 #homepage
+
 def home(request):
 
 
