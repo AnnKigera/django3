@@ -43,7 +43,13 @@ INSTALLED_APPS = [
     'crispy_forms',
 
     'django_otp',
+    'django_otp.plugins.otp_static',
     'django_otp.plugins.otp_totp',
+    #'django_otp.plugins.otp_email',  # <- if you want email capability.
+    #'two_factor',
+    #'two_factor.plugins.phonenumber',  # <- if you want phone number capability.
+    #'two_factor.plugins.email',  # <- if you want email capability.
+    #'two_factor.plugins.yubikey',  # <- for yubikey capability.
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -87,15 +93,16 @@ WSGI_APPLICATION = 'crm.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME':'isproject2',
-        'USER':'root',
-        'PASSWORD':'',
-        'HOST':'127.0.0.1',
-        'PORT':'3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+        #'ENGINE': 'django.db.backends.mysql',
+        #'NAME':'isproject2',
+        #'USER':'root',
+        #'PASSWORD':'',
+        #'HOST':'127.0.0.1',
+        #'PORT':'3306',
 
-        #'ENGINE': 'django.db.backends.sqlite3',
-        #'NAME': BASE_DIR / 'db.sqlite3',
+       
     }
 }
 
@@ -131,18 +138,43 @@ USE_I18N = True
 USE_TZ = True
 
 
+#EMAIL_FROM_USER = os.environ.get('EMAIL_FROM_USER')
+#EMAIL_HOST = 'smtp.gmail.com'
+#EMAIL_HOST_USER = os.environ.get('EMAIL_FROM_USER')
+#EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+#EMAIL_USE_TLS = True
+#EMAIL_PORT = 587
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = '587'
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'wairimukigera001@gmail.com'
+DEFAULT_FROM_EMAIL = 'wairimukigera001@gmail.com'
+EMAIL_HOST_PASSWORD = 'qjbm yzzt qotk qfkg'
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-LOGIN_URL = 'doctor-login', 'patient-login'
+AUTH_USER_MODEL = 'webapp.User'
+#LOGIN_URL = 'webapp/my-login'
+LOGIN_URL ='two_factor:login'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+#EMAIL_HOST = 'smtp.gmail.com'
+#EMAIL_POST = 587
+#EMAIL_USE_TLS = True
+#EMAIL_HOST_USER ='wairimukigera001@gmail.com '
+#EMAIL_HOST_PASSWORD ='owih fhik fyhd enzg'
 
 
 

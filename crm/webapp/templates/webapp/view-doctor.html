@@ -1,0 +1,51 @@
+{% extends 'webapp/base.html' %}
+
+
+{% block content %}
+
+    <div class="card">
+
+
+
+        <div class="card-body">
+            <i class="fa fa-user-circle" aria-hidden="true"></i> &nbsp;
+
+            <strong>
+
+          
+
+           
+
+                {{doctor.last_name|upper}}
+    
+                {{doctor.first_name}}
+                
+            </strong>
+    
+            <hr>
+            <p><strong> Name: </strong> {{doctor.name}} </p>
+
+            <p><strong> Email: </strong> {{doctor.email}} </p>
+
+            <p><strong> Phone number: </strong> {{doctor.phone}} </p>
+
+
+        </div>
+    </div>
+
+    <br>
+
+    <a href="{% url 'doctor' %}" class="btn btn-secondary">Return &nbsp; <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+
+    &nbsp; <!--non breaking space-->
+
+    <a href="{% url 'update-doctor' record.id %}" class="btn btn-info">Update &nbsp; <i class="fa fa-pencil" aria-hidden="true"></i> </a>
+
+    &nbsp; <!--non breaking space-->
+
+    <a href="{% url 'delete-doctor' record.id %}" class="btn btn-danger">Delete &nbsp; <i class="fa fa-trash-o" aria-hidden="true"></i> </a>
+
+
+
+
+{% endblock %}

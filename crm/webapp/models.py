@@ -1,13 +1,22 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
+
+class User(AbstractUser):
+      is_admin = models.BooleanField('Is admin', default=False)
+      is_doctor = models.BooleanField('Is doctor', default=False)
+      is_patient = models.BooleanField('Is patient', default=False)
+      is_administrator = models.BooleanField('Is administrator', default=False)
+
+
 
 
 class UserProfile(models.Model):
         user = models.OneToOneField(User, on_delete=models.CASCADE)
-        full_name = models.CharField(max_length=255,primary_key=True)
+        full_name = models.CharField(max_length=255,unique=True)
         email = models.CharField(max_length=255)
         age = models.IntegerField()
-        gender = models.CharField(max_length=10)
+        gender = models.CharField(max_length=10, default=('UserProfile'))
 
 class Patient(models.Model):
     name = models.CharField(max_length=255)
@@ -40,8 +49,8 @@ class DiabetesPrediction(models.Model):
 
 
 class Comment(models.Model):
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
     timestamp = models.DateTimeField()
     text = models.TextField()
 

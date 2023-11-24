@@ -1,6 +1,7 @@
 {% extends 'webapp/base.html' %}
 
 
+
 {% block content %}
 
 
@@ -56,6 +57,8 @@
                 <td>{{ record.creation_date}}</td>
 
                 <td><a href="{% url 'record'  record.id %}"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
+                
+
             </tr>
             {% endfor %}
 

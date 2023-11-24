@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from django_otp.admin import OTPAdminSite
 from django_otp.plugins.otp_totp.models import TOTPDevice
 from django_otp.plugins.otp_totp.admin import TOTPDeviceAdmin
+from two_factor.urls import urlpatterns as tf_urls
 
 
 class OTPAdmin(OTPAdminSite):
@@ -21,8 +22,11 @@ admin_site.register(TOTPDevice, TOTPDeviceAdmin)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include(tf_urls)),
+    
 
     path('', include('webapp.urls')),
+    
 ]
 
 from django.conf import settings
