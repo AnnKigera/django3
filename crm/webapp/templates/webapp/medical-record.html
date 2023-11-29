@@ -1,0 +1,53 @@
+{% extends 'webapp/base.html' %}
+
+
+
+{% block content %}
+
+
+    <h5>Welcome to the medical record page, {{user}}!</h5>
+
+    <hr>
+
+    <a class="btn btn-outline-primary"   href="{% url 'create-medical-record' %}">
+        create a new medical record &nbsp; <i class="fa fa-plus-circle" aria-hidden="true"></i>
+    </a>
+
+    <hr>
+
+
+    <table class="table table-light table-hover table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">BMI</th>
+                <th scope="col">Glucose Level</th>
+                <th scope="col">Insulin Level</th>
+
+                <th scope="col">View</th>
+                
+            </tr>
+        </thead>
+
+        <tbody>
+        {% if records %}
+            {% for record in records %}    
+            <tr>
+                <td>{{ record.BMI}}</td>
+
+                <td>{{ record.glucose_level}}</td>
+
+                <td>{{ record.insulin_level}}</td>
+
+                <td><a href="{% url 'medical-record'  record.id %}"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
+                
+
+            </tr>
+            {% endfor %}
+
+        {% endif %}    
+        </tbody>
+    </table>
+
+
+
+{% endblock %}

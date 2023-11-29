@@ -1,0 +1,41 @@
+{% extends 'webapp/base.html' %}
+
+
+{% block content %}
+
+    <div class="card">
+
+
+
+        <div class="card-body">
+            <i class="fa fa-user-circle" aria-hidden="true"></i> &nbsp;
+
+            <h3>Medical Record Details</h3>
+    
+            <hr>
+            <p><strong> BMI: </strong> {{medical-record.BMI}} </p>
+
+            <p><strong> glucose_level: </strong> {{medical-record.glucose_level}} </p>
+
+            <p><strong> insulin_level: </strong> {{medical-record.insulin_level}} </p>
+
+
+        </div>
+    </div>
+
+    <br>
+
+    <a href="{% url 'medical-record' %}" class="btn btn-secondary">Return &nbsp; <i class="fa fa-arrow-left" aria-hidden="true"></i></a>
+
+    &nbsp; <!--non breaking space-->
+
+    <a href="{% url 'update-medical-record' doctor.id %}" class="btn btn-info">Update &nbsp; <i class="fa fa-pencil" aria-hidden="true"></i> </a>
+
+    &nbsp; <!--non breaking space-->
+
+    <a href="{% url 'delete-medical-record' doctor.id %}" class="btn btn-danger">Delete &nbsp; <i class="fa fa-trash-o" aria-hidden="true"></i> </a>
+
+
+
+
+{% endblock %}

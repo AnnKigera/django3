@@ -5,7 +5,9 @@ from django.contrib.auth import get_user_model
 from .models import Record
 from .models import Doctor
 from .models import Patient
-
+from .models import MedicalRecord
+from .models import Comment
+from .models import Prediction
 
 from django import forms
 
@@ -63,6 +65,20 @@ class CreatePatientForm(forms.ModelForm):
         model = Patient
         fields = ['name', 'age', 'gender', 'contact_email', 'contact_phone', 'report']
 
+class MedicalRecordForm(forms.ModelForm):
+    class Meta:
+        model = MedicalRecord
+        fields = ['user','bmi', 'glucose_level', 'insulin_level']
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['author', 'text']
+
+
+
+
+
 # update a record
 class UpdateRecordForm(forms.ModelForm):
 
@@ -81,3 +97,25 @@ class UpdatePatientForm(forms.ModelForm):
      class Meta:
         model = Patient
         fields = ['name', 'age', 'gender', 'contact_email', 'contact_phone', 'report']
+
+
+class MedicalRecordForm(forms.ModelForm):
+    class Meta:
+        model = MedicalRecord
+        fields = ['bmi', 'glucose_level', 'insulin_level']
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['text']
+
+
+class UserPredictionForm(forms.ModelForm):
+    
+    
+
+    class Meta:
+        model = Prediction
+        fields = ['pregnancies', 'glucose', 'blood_pressure', 'skin_thickness', 'insulin', 'bmi', 'age']
+
+

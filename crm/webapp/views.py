@@ -1,19 +1,23 @@
+import pickle
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from sklearn.preprocessing import StandardScaler
 from .forms import CreateUserForm, LoginForm, CreateRecordForm,CreateDoctorForm,CreatePatientForm, UpdateRecordForm,UpdateDoctorForm,UpdatePatientForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import auth
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import get_user_model
-
+from .forms import MedicalRecordForm,CommentForm ,UserPredictionForm
 from django.contrib.auth.decorators import login_required
-
+from .models import Administrator
 from .models import Record
+from .models import MedicalRecord
 from .models import Patient
 from .models import Doctor
 from .models import Comment
-
-
+from .models import Prediction
 from django.contrib import messages
+import pandas as pd
 
 #homepage
 
@@ -23,17 +27,6 @@ def home(request):
     return render(request, 'webapp/index.html')
 
 
-def doctor(request):
-
-
-    return render(request, 'webapp/doctor.html')
-
-
-
-def patient(request):
-
-
-    return render(request, 'webapp/patient.html')
 
 #register
 def register(request):
@@ -108,7 +101,7 @@ def doctor(request):
 
     my_doctor = Doctor.objects.all()
 
-    context = {'doctor': my_doctor}
+    context = {'my_doctor': my_doctor}
 
 
     return render(request, 'webapp/doctor.html', context=context)
@@ -130,14 +123,38 @@ def patient(request):
 
 @login_required(login_url='my-login')
 
-def administrator(request):
+def administrators(request):
 
-    my_administrator = administrator.objects.all()
+    my_administrators = Administrator.objects.all()
 
-    context = {'comment': my_administrator}
+    context = {'administrators': my_administrators}
 
 
-    return render(request, 'webapp/comment.html', context=context)
+    return render(request, 'webapp/administrator.html', context=context)
+
+#dashboard
+
+@login_required(login_url='my-login')
+
+def medical_record(request):
+
+    my_MedicalRecord = MedicalRecord.objects.all()
+
+    context = {'my_MedicalRecord': my_MedicalRecord}
+
+
+    return render(request, 'webapp/medical-record.html', context=context)
+
+@login_required(login_url='my-login')
+
+def Comment(request):
+
+    my_Comment = Comment.objects.all()
+
+    context = {'my_Comment': my_Comment}
+
+
+    return render(request, 'webapp/medical-record.html', context=context)
 
 
 #create a record
@@ -216,6 +233,105 @@ def create_patient(request):
     context = {'form': form}
 
     return render(request, 'webapp/create-patient.html', context=context)
+
+#cre
+@login_required(login_url='my-login')
+def create_medical_record(request):
+    form = MedicalRecordForm()
+
+    if request.method == 'POST':
+        form = MedicalRecordForm(request.POST)
+        if form.is_valid():
+            medical_record = form.save(commit=False)
+            medical_record.user = request.user  # Assuming you are using Django's built-in User model
+            medical_record.save()
+            messages.success(request, "Medical record created successfully!")
+            return redirect("medical-record")
+
+    context = {'form': form}
+    return render(request, 'webapp/create-medical-record.html', context=context)
+
+
+@login_required(login_url='my-login')
+def update_medical_record(request, pk):
+    medical_record = MedicalRecord.objects.get(id=pk)
+    form = MedicalRecordForm(instance=medical_record)
+
+    if request.method == 'POST':
+        form = MedicalRecordForm(request.POST, instance=medical_record)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Medical record updated successfully!")
+            return redirect("medical-record")
+
+    context = {'form': form}
+    return render(request, 'webapp/update-medical-record.html', context=context)
+
+
+@login_required(login_url='my-login')
+def delete_medical_record(request, pk):
+    medical_record = MedicalRecord.objects.get(id=pk)
+
+    if request.method == 'POST':
+        medical_record.delete()
+        messages.success(request, "Medical record deleted successfully!")
+        return redirect("medical-record")
+
+    context = {'medical_record': medical_record}
+    return render(request, 'webapp/delete-medical-record.html', context=context)
+
+
+
+
+# Similar views for create, update, and delete comment and diabetes prediction
+
+#cre
+@login_required(login_url='my-login')
+def create_comment(request):
+    form = CommentForm()
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Comment created successfully!")
+            return redirect("comment")
+
+    context = {'form': form}
+    return render(request, 'webapp/create-comment.html', context=context)
+
+
+@login_required(login_url='my-login')
+def update_comment(request, pk):
+    comment = Comment.objects.get(id=pk)
+    form = CommentForm(instance=comment)
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Comment updated successfully!")
+            return redirect("comment")
+
+    context = {'form': form}
+    return render(request, 'webapp/update-comment.html', context=context)
+
+
+@login_required(login_url='my-login')
+def delete_comment(request, pk):
+    comment = Comment.objects.get(id=pk)
+
+    if request.method == 'POST':
+        comment.delete()
+        messages.success(request, "Comment deleted successfully!")
+        return redirect("comment")
+
+    context = {'comment': comment}
+    return render(request, 'webapp/delete-comment.html', context=context)
+
+
+
+
 
 
 #update a record
@@ -313,7 +429,7 @@ def singular_doctor(request, pk):
     selected_doctor = Doctor.objects.get(id=pk)
     
     # Pass the selected doctor as a list to the template
-    context = {'my_doctors': [selected_doctor]}
+    context = {'doctor': [selected_doctor]}
 
     return render(request, 'webapp/view-doctor.html', context=context)
 
@@ -369,6 +485,89 @@ def delete_patient(request, pk):
     messages.success(request, "Your record was deleted!")
 
     return redirect("patient")
+
+
+with open('C:/Users/annwa/AI/model_pickle', 'rb') as model_file:
+
+    model_pickle = pickle.load(model_file)
+
+def make_prediction(data):
+    try:
+        # Create a DataFrame from the form data
+        features_df = pd.DataFrame(data, index=[0])
+
+        # Apply the scaler to the features
+        features_scaled = ScalarType.transform(features_df)
+
+        # Make predictions using the loaded model
+        prediction = model_pickle.predict(features_scaled)[0]
+
+        return prediction
+
+    except Exception as e:
+        print(f"Error in make_prediction: {e}")
+        return None
+
+
+def prediction(request):
+    prediction_result = None
+
+    if request.method == 'POST':
+        form = UserPredictionForm(request.POST)
+        if form.is_valid():
+            try:
+                # Get the form data and make predictions
+                data = {
+                    'Pregnancies': form.cleaned_data['pregnancies'],
+                    'Glucose': form.cleaned_data['glucose'],
+                    'BloodPressure': form.cleaned_data['blood_pressure'],
+                    'SkinThickness': form.cleaned_data['skin_thickness'],
+                    'Insulin': form.cleaned_data['insulin'],
+                    'BMI': form.cleaned_data['bmi'],
+                    
+                    'Age': form.cleaned_data['age'],
+                    'Outcome': form.cleaned_data['outcome'],
+                }
+
+                # Make predictions
+                raw_prediction = make_prediction(data)
+
+                # Map raw prediction to human-readable labels
+                prediction_result = "Presence of Diabetes" if raw_prediction == 1 else "Absence of Diabetes"
+
+                # Save the prediction result in the database
+                # patient = form.cleaned_data['patient']
+                # user_prediction = Prediction(
+                #     patient=patient, 
+                #     doctor=request.user,
+                #     name=f"{patient.first_name} {patient.last_name}", 
+                #     **data
+                # )
+                # user_prediction.save()
+
+                # Add a success message with the prediction result
+                messages.success(request, f'The prediction result is: {prediction_result}')
+
+            except Exception as e:
+                print(f"Error during prediction: {e}")
+                messages.error(request, 'An error occurred during prediction. Please try again.')
+
+            # Redirect to the same page after form submission
+            return redirect('prediction')
+
+    else:
+        form = UserPredictionForm()
+
+    return render(request, 'webapp/prediction.html', {'form': form, 'prediction': prediction_result})
+
+def prediction_view(request):
+    prediction_instance = Prediction.objects.get(id=1)
+    result = prediction_instance.outcome  # Replace 'outcome' with the actual attribute name
+    return render(request, 'webapp/prediction.html', {'result': result})
+
+
+
+
 
 
 

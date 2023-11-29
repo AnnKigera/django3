@@ -1,0 +1,50 @@
+{% extends 'webapp/base.html' %}
+
+
+
+{% block content %}
+
+
+    <h5>Welcome to the comment page, {{user}}!</h5>
+
+    <hr>
+
+    <a class="btn btn-outline-primary"   href="{% url 'create-comment' %}">
+        create a new comment &nbsp; <i class="fa fa-plus-circle" aria-hidden="true"></i>
+    </a>
+
+    <hr>
+
+
+    <table class="table table-light table-hover table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">Author</th>
+                <th scope="col">Comment</th>
+
+                <th scope="col">View</th>
+                
+            </tr>
+        </thead>
+
+        <tbody>
+        {% if comments %}
+            {% for comment in comments %}    
+            <tr>
+                <td>{{ comment.author}}</td>
+
+                <td>{{ comment.comment}}</td>
+
+                <td><a href="{% url 'comment'  comment.id %}"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
+                
+
+            </tr>
+            {% endfor %}
+
+        {% endif %}    
+        </tbody>
+    </table>
+
+
+
+{% endblock %}
