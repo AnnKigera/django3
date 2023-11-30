@@ -8,7 +8,10 @@ urlpatterns = [
     path('dashboard', views.dashboard, name="dashboard"),
     path('medical-record', views.MedicalRecord, name="medical-record"),
     path('comment', views.Comment, name="comment"),
-    path('prediction', views.Prediction, name="prediction"),
+    path('prediction', views.prediction, name="prediction"),
+    path('prediction1', views.prediction1, name="prediction1"),
+    path('predict/', views.predict, name="predict"),
+    path('predict/result', views.result, name="predict"),
     
     
     path('user-logout', views.user_logout, name="user-logout"),
